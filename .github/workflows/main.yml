@@ -34,6 +34,41 @@ jobs:
           ls -la ShoppingListApp_v4
           ls -la ShoppingListApp_v4/app
 
+      - name: Fix Kotlin JVM target
+        working-directory: ShoppingListApp_v4
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          files = [
+              Path("app/build.gradle.kts"),
+              Path("build.gradle.kts")
+          ]
+
+          for file in files:
+              if file.exists():
+                  text = file.read_text()
+
+                  text = text.replace(
+                      'jvmTarget = "1.8"',
+                      'jvmTarget = "17"'
+                  )
+
+                  text = text.replace(
+                      'jvmTarget = \'1.8\'',
+                      'jvmTarget = "17"'
+                  )
+
+                  text = text.replace(
+                      'JvmTarget.JVM_1_8',
+                      'JvmTarget.JVM_17'
+                  )
+
+                  file.write_text(text)
+
+                  print(f"Checked: {file}")
+          PY
+
       - name: Make Gradle wrapper executable
         run: |
           chmod +x ShoppingListApp_v4/gradlew

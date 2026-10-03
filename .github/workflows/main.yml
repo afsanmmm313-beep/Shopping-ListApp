@@ -19,6 +19,10 @@ jobs:
           gradle-version: 8.9
       - name: Unzip project
         run: unzip -q .github/workflows/ShoppingListApp_v4.zip
+      - name: Fix JVM target
+        run: |
+          cd ShoppingListApp_v4
+          sed -i 's/compileSdk=35/compileSdk=35; compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }; kotlinOptions { jvmTarget = "17" }/' app/build.gradle.kts
       - name: Build debug APK
         run: |
           cd ShoppingListApp_v4
@@ -26,4 +30,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ShoppingList-debug-apk
-          path: ShoppingListApp_v4/app/build/outputs/apk/debug/*.apk
+          path: ShoppingListApp_v4/app/build/outputs/apk/debug/*.apkconcurrency: 
